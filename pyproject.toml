@@ -1,0 +1,29 @@
+[project]
+name = "citeorrefuse"
+version = "0.1.0"
+description = "A production-grade AI Financial Research Assistant for SEC filings"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "lxml>=5.2",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "tiktoken>=0.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["libs*"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
