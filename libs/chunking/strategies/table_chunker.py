@@ -12,6 +12,7 @@ def chunk_table(
     start_order_index: int,
     char_start: int,
     char_end: int,
+    part: str | None = None,
 ) -> list[Chunk]:
     """Chunks a table into one or more markdown chunks.
 
@@ -26,7 +27,7 @@ def chunk_table(
     if not table.rows or count_tokens(full_markdown) <= max_tokens:
         return [
             _make_chunk(full_markdown, filing_id, section_item_code, section_title,
-                        start_order_index, char_start, char_end)
+                        start_order_index, char_start, char_end, part)
         ]
 
     chunks: list[Chunk] = []
@@ -42,7 +43,7 @@ def chunk_table(
             return
         chunks.append(
             _make_chunk(markdown_for(current_rows), filing_id, section_item_code, section_title,
-                        order_index, char_start, char_end)
+                        order_index, char_start, char_end, part)
         )
         order_index += 1
         current_rows = []
@@ -69,6 +70,7 @@ def _make_chunk(
     order_index: int,
     char_start: int,
     char_end: int,
+    part: str | None = None,
 ) -> Chunk:
     return Chunk(
         chunk_id=f"{filing_id}:{section_item_code}:table:{order_index}",
@@ -76,6 +78,7 @@ def _make_chunk(
         chunk_type=ChunkType.TABLE,
         section_item_code=section_item_code,
         section_title=section_title,
+        part=part,
         order_index=order_index,
         char_start=char_start,
         char_end=char_end,

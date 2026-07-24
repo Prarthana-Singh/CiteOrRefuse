@@ -10,6 +10,7 @@ def chunk_text_blocks(
     section_item_code: str,
     section_title: str,
     start_order_index: int,
+    part: str | None = None,
 ) -> list[Chunk]:
     """Packs whole paragraphs into ~target_tokens chunks.
 
@@ -51,6 +52,7 @@ def chunk_text_blocks(
                 order_index,
                 target,
                 overlap_budget,
+                part,
             )
             chunks.extend(windows)
             order_index += len(windows)
@@ -73,6 +75,7 @@ def chunk_text_blocks(
                 chunk_type=ChunkType.TEXT,
                 section_item_code=section_item_code,
                 section_title=section_title,
+                part=part,
                 order_index=order_index,
                 char_start=offsets[indices[0]][0],
                 char_end=offsets[indices[-1]][1],
@@ -105,6 +108,7 @@ def _split_oversized_paragraph(
     start_order_index: int,
     target: int,
     overlap: int,
+    part: str | None = None,
 ) -> list[Chunk]:
     tokens = encode(paragraph)
     order_index = start_order_index
@@ -119,6 +123,7 @@ def _split_oversized_paragraph(
                 chunk_type=ChunkType.TEXT,
                 section_item_code=section_item_code,
                 section_title=section_title,
+                part=part,
                 order_index=order_index,
                 char_start=char_start,
                 char_end=char_start + len(window_text),

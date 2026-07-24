@@ -18,6 +18,7 @@ class Filing(BaseModel):
     company: str
     cik: str | None = None
     fiscal_year: int | None = None
+    filing_date: str | None = None
     form_type: str = "10-K"
     source_path: str
 
@@ -59,6 +60,7 @@ class Chunk(BaseModel):
     chunk_type: ChunkType
     section_item_code: str
     section_title: str
+    part: str | None = None
     order_index: int
     char_start: int
     char_end: int

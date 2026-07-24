@@ -65,7 +65,8 @@ def chunk_filing(filing: Filing, blocks: list[Block], sections: list[Section]) -
                 base_offset = block_offsets[run_start][0]
                 paragraphs = [b.text for b in run_blocks]
                 new_chunks = chunk_text_blocks(
-                    paragraphs, filing.filing_id, section.item_code, section.title, order_index
+                    paragraphs, filing.filing_id, section.item_code, section.title,
+                    order_index, section.part,
                 )
                 for c in new_chunks:
                     c.char_start += base_offset
@@ -83,6 +84,7 @@ def chunk_filing(filing: Filing, blocks: list[Block], sections: list[Section]) -
                     order_index,
                     char_start,
                     char_end,
+                    section.part,
                 )
                 all_chunks.extend(table_chunks)
                 order_index += len(table_chunks)
