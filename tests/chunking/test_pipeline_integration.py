@@ -73,3 +73,55 @@ def test_chunk_ids_are_unique(filing):
     chunks = chunk_filing_from_source(filing)
     ids = [c.chunk_id for c in chunks]
     assert len(ids) == len(set(ids))
+
+
+_FIXTURES_DIR = Path(__file__).parents[2] / "data" / "fixtures"
+
+
+@pytest.mark.parametrize(
+    "fixture_name,expected_chunk_count,expected_item8_chunk_count",
+    [
+        ("tsla-20251231.html", 289, 161),
+        ("10-K.html", 285, 141),  # Microsoft FY2025 10-K (msft-20250630.htm)
+    ],
+)
+def test_real_filing_chunk_counts(fixture_name, expected_chunk_count, expected_item8_chunk_count):
+    """Pins total and per-section chunk counts against real EDGAR filings.
+
+    Item 8 (Financial Statements) is checked specifically because it's the
+    section a running-header pagination bug fragmented into ~40 spurious
+    sections -- if that regresses, chunk counts across dozens of bogus
+    "sections" would shift in a way a total-only assertion could still miss.
+    """
+    real_filing = Filing(
+        filing_id=fixture_name,
+        company="Test Co",
+        source_path=str(_FIXTURES_DIR / fixture_name),
+    )
+    chunks = chunk_filing_from_source(real_filing)
+
+    assert len(chunks) == expected_chunk_count
+    item8_chunks = [c for c in chunks if c.section_item_code == "8"]
+    assert len(item8_chunks) == expected_item8_chunk_count
+
+
+def test_real_10q_filing_chunk_ids_stay_unique_despite_item_code_reuse():
+    """A 10-Q reuses Item codes 1-4 across Part I and Part II with
+    different meanings (e.g. Part I Item 1 is "Financial Statements", Part
+    II Item 1 is "Legal Proceedings"). `chunk_id` is built from
+    `section_item_code`, so this guards against the two same-numbered
+    sections ever producing colliding chunk IDs -- protected today by
+    `order_index` in `chunk_filing` being a filing-global counter rather
+    than one that resets per section.
+    """
+    real_filing = Filing(
+        filing_id="aapl-10q",
+        company="Apple Inc.",
+        form_type="10-Q",
+        source_path=str(_FIXTURES_DIR / "aapl-20260328.html"),
+    )
+    chunks = chunk_filing_from_source(real_filing)
+
+    assert len(chunks) == 86
+    ids = [c.chunk_id for c in chunks]
+    assert len(ids) == len(set(ids))

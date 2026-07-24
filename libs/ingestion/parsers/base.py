@@ -35,5 +35,5 @@ class FilingParser(ABC):
     """
 
     @abstractmethod
-    def parse(self, raw_content: str) -> ParsedDocument:
+    def parse(self, raw_content: str | bytes) -> ParsedDocument:
         raise NotImplementedError

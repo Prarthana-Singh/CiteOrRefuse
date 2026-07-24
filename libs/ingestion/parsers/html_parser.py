@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 
 from libs.core.exceptions import ParsingError
-from libs.ingestion.normalizers.text_cleaner import collapse_whitespace, is_boilerplate
+from libs.ingestion.normalizers.text_cleaner import collapse_whitespace, extract_text, is_boilerplate
 from libs.ingestion.parsers.base import Block, BlockType, FilingParser, ParsedDocument
 from libs.ingestion.table_extraction.html_tables import extract_table
 
@@ -25,7 +25,7 @@ _CONTAINER_CHILD_TAGS = list(_LEAF_BLOCK_TAGS | _HEADING_TAGS | {"table"})
 class SecHtmlParser(FilingParser):
     """Parses SEC EDGAR 10-K HTML into an ordered ParsedDocument."""
 
-    def parse(self, raw_content: str) -> ParsedDocument:
+    def parse(self, raw_content: str | bytes) -> ParsedDocument:
         soup = BeautifulSoup(raw_content, "lxml")
         root = soup.body or soup
         for tag in root.find_all(["script", "style"]):
@@ -70,9 +70,21 @@ def _tag_to_block(tag: Tag, index: int) -> Block | None:
         table = extract_table(tag)
         if not table.rows and not table.header:
             return None
+        if not table.rows:
+            # A single non-empty row with no body rows is real EDGAR filings'
+            # way of laying out one line of text (a heading, a checkbox
+            # option) in aligned columns rather than a real data table --
+            # surface it as prose so section detection can see it.
+            text = collapse_whitespace(" ".join(cell for cell in table.header if cell))
+            if not text or is_boilerplate(text):
+                return None
+            return Block(
+                index=index, block_type=BlockType.TEXT, text=text,
+                is_emphasized=_looks_emphasized(tag),
+            )
         return Block(index=index, block_type=BlockType.TABLE, table=table)
 
-    text = collapse_whitespace(tag.get_text(separator=" ", strip=True))
+    text = extract_text(tag)
     if not text or is_boilerplate(text):
         return None
 

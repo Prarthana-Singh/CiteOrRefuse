@@ -2,7 +2,7 @@
 from bs4.element import Tag
 
 from libs.core.models import Table
-from libs.ingestion.normalizers.text_cleaner import collapse_whitespace
+from libs.ingestion.normalizers.text_cleaner import extract_text
 
 
 def extract_table(table_tag: Tag) -> Table:
@@ -15,13 +15,13 @@ def extract_table(table_tag: Tag) -> Table:
     """
     caption = None
     if table_tag.caption is not None:
-        caption_text = collapse_whitespace(table_tag.caption.get_text(" ", strip=True))
+        caption_text = extract_text(table_tag.caption)
         caption = caption_text or None
 
     all_rows: list[list[str]] = []
     for row in table_tag.find_all("tr"):
         cells = [
-            collapse_whitespace(cell.get_text(" ", strip=True))
+            extract_text(cell)
             for cell in row.find_all(["td", "th"])
         ]
         if any(cell for cell in cells):
