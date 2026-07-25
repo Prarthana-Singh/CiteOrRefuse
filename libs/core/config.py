@@ -48,7 +48,34 @@ class RetrievalSettings(BaseSettings):
     rerank_model: str = "rerank-v3.5"
 
 
+class GenerationSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="CITEORREFUSE_GENERATION_")
+
+    model: str = "gpt-4.1"
+    temperature: float = 0.0
+    context_token_budget: int = 6000
+
+
+class GroundednessSettings(BaseSettings):
+    """The gate that makes this "cite or refuse": every claim in a
+    generated answer must resolve to a chunk_id that was actually
+    retrieved (checked mechanically, no LLM call needed) AND be judged as
+    genuinely supported by that chunk's text (an LLM-as-judge call per
+    claim) before the answer is returned. Anything short of that -> refuse.
+    """
+
+    model_config = SettingsConfigDict(env_prefix="CITEORREFUSE_GROUNDEDNESS_")
+
+    judge_model: str = "gpt-4.1-mini"
+    confidence_threshold: float = 0.7
+    refusal_message: str = (
+        "I don't have sufficient evidence in the retrieved filings to answer this confidently."
+    )
+
+
 settings = ChunkingSettings()
 embedding_settings = EmbeddingSettings()
 vectorstore_settings = VectorStoreSettings()
 retrieval_settings = RetrievalSettings()
+generation_settings = GenerationSettings()
+groundedness_settings = GroundednessSettings()
