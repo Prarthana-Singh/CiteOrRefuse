@@ -12,6 +12,7 @@ dependencies = [
     "openai>=1.30",
     "qdrant-client>=1.9",
     "fastembed>=0.3",
+    "cohere>=5.0",
 ]
 
 [project.optional-dependencies]

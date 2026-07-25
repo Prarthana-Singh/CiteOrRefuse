@@ -36,6 +36,19 @@ class VectorStoreSettings(BaseSettings):
     sparse_model: str = "Qdrant/bm25"
 
 
+class RetrievalSettings(BaseSettings):
+    """The Cohere API key, like the OpenAI key, is read by the Cohere SDK
+    from its own env var, not duplicated here -- see `EmbeddingSettings`."""
+
+    model_config = SettingsConfigDict(env_prefix="CITEORREFUSE_RETRIEVAL_")
+
+    prefetch_limit: int = 20
+    candidate_limit: int = 20
+    default_top_k: int = 5
+    rerank_model: str = "rerank-v3.5"
+
+
 settings = ChunkingSettings()
 embedding_settings = EmbeddingSettings()
 vectorstore_settings = VectorStoreSettings()
+retrieval_settings = RetrievalSettings()
