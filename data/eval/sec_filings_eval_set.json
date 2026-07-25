@@ -47,9 +47,9 @@
     "case_id": "tesla-reportable-segments",
     "query": "What are Tesla's reportable business segments?",
     "expected_answered": true,
-    "expected_chunk_ids": ["tsla-2025-10k:1:0"],
+    "expected_chunk_ids": ["tsla-2025-10k:1:0", "tsla-2025-10k:8:253"],
     "expected_answer_contains": ["automotive", "energy generation and storage"],
-    "notes": "BLIND case: fact picked from Item 1 Business ('We operate as two reportable segments: (i) automotive and (ii) energy generation and storage')."
+    "notes": "BLIND case: fact picked from Item 1 Business ('We operate as two reportable segments: (i) automotive and (ii) energy generation and storage'). FLAKINESS FOUND AND FIXED (2026-07-25): this case flipped between answered/refused across 20 identical live runs (19/20 answered, 1/20 refused, confirmed via scripts/investigate_tesla_flakiness.py). Root cause, precisely isolated: retrieval was 100% deterministic across all 20 runs; generation occasionally (5%) mis-bound a factually-correct, word-for-word-identical claim to tsla-2025-10k:1:0 (Item 1 overview, no segment detail) instead of tsla-2025-10k:8:253 (Note 16, Segment Reporting -- the actual verbatim source), since both chunks were retrieved and both touch the topic. Fixed via citation-rebind in libs/generation/groundedness.py: when a claim fails against its cited chunk, check other already-retrieved chunks before refusing. RESIDUAL RISK, not solved by the fix: rebind only fires when the originally-cited chunk FAILS its groundedness check -- a mis-bind to a chunk that only loosely/imprecisely supports the same claim (close enough to pass) never reaches the rebind path and is invisible to both the fix and this eval harness's current metrics. expected_chunk_ids widened to accept either source, since both are now valid post-fix."
   },
   {
     "case_id": "tesla-wrong-year-revenue-2026",
