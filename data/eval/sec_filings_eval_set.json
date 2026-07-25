@@ -99,9 +99,9 @@
     "case_id": "apple-total-net-sales-q2-2026",
     "query": "What were Apple's total net sales for the three months ended March 28, 2026?",
     "expected_answered": true,
-    "expected_chunk_ids": ["aapl-2026-10q:2:table:49", "aapl-2026-10q:1:table:40"],
+    "expected_chunk_ids": ["aapl-2026-10q:2:table:49", "aapl-2026-10q:1:table:40", "aapl-2026-10q:1:table:1"],
     "expected_answer_contains": ["111,184"],
-    "notes": "BLIND case: fact picked from Item 2 MD&A's segment net-sales table (also appears in Item 1 financial-statement notes, hence two acceptable chunk_ids)."
+    "notes": "BLIND case, ORIGINAL PREDICTION WAS WRONG (found and corrected 2026-07-25, not silently): I only picked the Item 2 segment net-sales table (also in Item 1 notes) as the expected source. First live run correctly answered 111,184 with confidence 1.00 but FAILED citation_correct because it actually cited aapl-2026-10q:1:table:1 -- the Condensed Consolidated Statements of Operations (the income statement itself), which also states 'Total net sales | 111,184' as a primary line item and is arguably a MORE canonical source for a bare 'total net sales' question than the segment breakdown. Verified directly via scripts/debug_single_query.py before editing this case, not assumed. This was a gap in my blind fact-picking (I found the segment table but didn't check whether the same aggregate figure also appears in the primary financial statements), not a pipeline defect -- the pipeline's citation was accurate and well-chosen. expected_chunk_ids widened to include it."
   },
   {
     "case_id": "apple-americas-net-sales-q2-2026",
