@@ -1,5 +1,7 @@
 from libs.eval.dataset import EvalCase
 from libs.eval.metrics import score_case
+from libs.generation.generator import Claim
+from libs.generation.groundedness import ClaimVerdict, GroundednessResult
 from libs.generation.pipeline import AnswerResult
 
 _REFUSAL_CASE = EvalCase(
@@ -102,6 +104,87 @@ def test_answer_missing_expected_content_fails_content_check():
 
     assert scored.passed is False
     assert scored.content_correct is False
+
+
+_ZERO_CLAIMS_CASE = EvalCase(
+    case_id="zero-claims",
+    query="What was Amazon's North America net sales in 2026?",
+    expected_answered=False,
+    assert_zero_claims=True,
+)
+
+
+def test_assert_zero_claims_passes_when_generation_produced_no_claims():
+    result = AnswerResult(
+        query=_ZERO_CLAIMS_CASE.query,
+        answered=False,
+        refusal_reason="insufficient evidence",
+        groundedness=GroundednessResult(is_grounded=False, overall_confidence=0.0, claim_verdicts=[]),
+    )
+
+    scored = score_case(_ZERO_CLAIMS_CASE, result, retrieved_chunk_ids=["amzn:8:table:157"])
+
+    assert scored.passed is True
+    assert scored.zero_claims_correct is True
+
+
+def test_assert_zero_claims_passes_when_retrieval_found_nothing_at_all():
+    """No candidates retrieved -> generation never ran -> groundedness is
+    None -- this trivially satisfies "zero claims" too, not a violation."""
+    result = AnswerResult(query=_ZERO_CLAIMS_CASE.query, answered=False, groundedness=None)
+
+    scored = score_case(_ZERO_CLAIMS_CASE, result, retrieved_chunk_ids=[])
+
+    assert scored.passed is True
+
+
+def test_assert_zero_claims_fails_when_the_gate_caught_nonzero_claims():
+    """Refused correctly, but via the groundedness gate rejecting generated
+    claims -- not via generation producing zero claims in the first place.
+    A real, distinct failure mode from "answered when it should refuse"."""
+    claim = Claim(text="Revenue was $2B in 2026.", chunk_id="amzn:8:table:157")
+    result = AnswerResult(
+        query=_ZERO_CLAIMS_CASE.query,
+        answered=False,
+        refusal_reason="insufficient evidence",
+        groundedness=GroundednessResult(
+            is_grounded=False,
+            overall_confidence=0.9,
+            claim_verdicts=[ClaimVerdict(claim=claim, supported=False, confidence=0.9)],
+        ),
+    )
+
+    scored = score_case(_ZERO_CLAIMS_CASE, result, retrieved_chunk_ids=["amzn:8:table:157"])
+
+    assert scored.passed is False
+    assert scored.zero_claims_correct is False
+    assert "groundedness gate" in scored.details
+
+
+def test_assert_zero_claims_fails_when_the_pipeline_answers_instead_of_refusing():
+    """Regression scenario found live in Phase 5 Task 3b: the pipeline
+    doesn't refuse at all, it fully answers -- the failure detail must say
+    so, not claim a refusal happened via the gate when none did.
+    """
+    claim = Claim(text="Revenue was $2B in 2026.", chunk_id="amzn:8:table:157")
+    result = AnswerResult(
+        query=_ZERO_CLAIMS_CASE.query,
+        answered=True,
+        answer="Revenue was $2B in 2026.",
+        citations=[{"chunk_id": "amzn:8:table:157"}],
+        groundedness=GroundednessResult(
+            is_grounded=True,
+            overall_confidence=0.95,
+            claim_verdicts=[ClaimVerdict(claim=claim, supported=True, confidence=0.95)],
+        ),
+    )
+
+    scored = score_case(_ZERO_CLAIMS_CASE, result, retrieved_chunk_ids=["amzn:8:table:157"])
+
+    assert scored.passed is False
+    assert scored.zero_claims_correct is False
+    assert "answered instead" in scored.details
+    assert "groundedness gate" not in scored.details
 
 
 def test_case_without_expected_chunk_ids_or_content_only_checks_the_refused_flag():

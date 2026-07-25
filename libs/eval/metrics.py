@@ -66,10 +66,16 @@ def score_case(case: EvalCase, result: AnswerResult, retrieved_chunk_ids: list[s
     if not refusal_correct:
         details.append(f"expected answered={case.expected_answered}, got {result.answered}")
     if not zero_claims_correct:
-        details.append(
-            f"expected zero claims from generation, got {claims_count} "
-            f"(refusal happened via the groundedness gate, not generation itself)"
-        )
+        if result.answered:
+            details.append(
+                f"expected a refusal via zero claims, but the pipeline answered "
+                f"instead (got {claims_count} claims)"
+            )
+        else:
+            details.append(
+                f"expected zero claims from generation, got {claims_count} "
+                f"(refusal happened via the groundedness gate, not generation itself)"
+            )
     if retrieval_recall == 0.0:
         details.append(f"none of expected chunk_ids {case.expected_chunk_ids} were retrieved")
     if citation_correct is False:
