@@ -140,13 +140,108 @@ def test_a_single_unsupported_claim_sinks_an_otherwise_grounded_answer():
     client = _FakeOpenAIClient(
         verdicts=[
             _Verdict(supported=True, confidence=0.95),
-            _Verdict(supported=False, confidence=0.9),
+            _Verdict(supported=False, confidence=0.9),  # claim 2 vs its own chunk
+            _Verdict(supported=False, confidence=0.3),  # rebind attempt vs the other chunk -- also fails
         ]
     )
 
     result = check_groundedness(generated, results, client)
 
     assert result.is_grounded is False
+    assert result.rebind_count == 0  # rebind was attempted but found nothing to rebind to
+
+
+def test_rebind_corrects_a_claim_misbound_to_the_wrong_retrieved_chunk():
+    """Deterministic reproduction of the real failure found in Phase 5's
+    Tesla flakiness investigation (run 6 of 20): generation produced a
+    factually-correct claim, word for word, but attached it to
+    tsla-2025-10k:1:0 (Item 1 Business overview -- doesn't contain the
+    detail) instead of tsla-2025-10k:8:253 (Note 16, Segment Reporting --
+    does, verbatim). Deliberately does not rely on reproducing the ~5%
+    flake live; this pins the exact scenario down with fakes.
+    """
+    claim = Claim(
+        text=(
+            "The energy generation and storage segment includes the design, "
+            "manufacture, installation, sales and leasing of energy generation "
+            "and storage products and related services."
+        ),
+        chunk_id="tsla-2025-10k:1:0",  # wrong -- this is the bug being fixed
+    )
+    generated = GeneratedAnswer(answer="...", claims=[claim])
+    results = [
+        _result("tsla-2025-10k:1:0", "ITEM 1. BUSINESS\n\nOverview\n\nWe design, develop, manufacture..."),
+        _result(
+            "tsla-2025-10k:8:253",
+            "Note 16 - Segment Reporting...energy generation and storage segment includes the design, "
+            "manufacture, installation, sales and leasing of energy generation and storage products...",
+        ),
+    ]
+    client = _FakeOpenAIClient(
+        verdicts=[
+            _Verdict(supported=False, confidence=0.9),  # vs the wrong chunk (1:0) -- fails, as it should
+            _Verdict(supported=True, confidence=1.0),  # vs the right chunk (8:253) -- rebind succeeds
+        ]
+    )
+
+    result = check_groundedness(generated, results, client)
+
+    assert result.is_grounded is True
+    assert result.rebind_count == 1
+    verdict = result.claim_verdicts[0]
+    assert verdict.supported is True
+    assert verdict.claim.chunk_id == "tsla-2025-10k:8:253"  # corrected
+    assert verdict.rebound_from_chunk_id == "tsla-2025-10k:1:0"  # original, wrong
+
+
+def test_rebind_never_applies_to_a_hallucinated_citation():
+    """A chunk_id that was never retrieved at all is a stronger, different
+    failure signal than mis-binding among real candidates -- rebind must
+    not "rescue" it by finding some other real chunk that happens to
+    support the same claim. Same zero-LLM-call guarantee as before.
+    """
+    generated = GeneratedAnswer(
+        answer="Revenue was $1B.",
+        claims=[Claim(text="Revenue was $1B.", chunk_id="acme-10k:7:999")],
+    )
+    results = [
+        _result("acme-10k:7:0", "Revenue was $1B in 2025."),
+        _result("acme-10k:7:1", "Revenue was $1B in 2025, per the summary table."),
+    ]
+    client = _FakeOpenAIClient(verdicts=[])  # would raise IndexError if called
+
+    result = check_groundedness(generated, results, client)
+
+    assert result.is_grounded is False
+    assert result.rebind_count == 0
+    assert client.chat.completions.calls == []
+
+
+def test_rebind_tries_candidates_in_descending_relevance_order():
+    """`results` is already rank-ordered; rebind should try candidates in
+    that order and stop at the first that supports the claim, not
+    exhaustively check every retrieved chunk.
+    """
+    claim = Claim(text="Segments are automotive and energy.", chunk_id="tsla:1:0")
+    generated = GeneratedAnswer(answer="...", claims=[claim])
+    results = [
+        _result("tsla:1:0", "Overview text, no segment detail."),
+        _result("tsla:8:253", "Segments are automotive and energy, in detail."),
+        _result("tsla:7:60", "Also mentions automotive and energy segments."),
+    ]
+    client = _FakeOpenAIClient(
+        verdicts=[
+            _Verdict(supported=False, confidence=0.9),  # original chunk fails
+            _Verdict(supported=True, confidence=0.99),  # first candidate (tsla:8:253) succeeds
+            # a third verdict for tsla:7:60 is deliberately NOT queued --
+            # if the search doesn't stop early, this test fails with IndexError
+        ]
+    )
+
+    result = check_groundedness(generated, results, client)
+
+    assert result.claim_verdicts[0].claim.chunk_id == "tsla:8:253"
+    assert len(client.chat.completions.calls) == 2
 
 
 def test_an_answer_with_no_claims_is_never_grounded():

@@ -67,16 +67,23 @@ def answer(
             groundedness=groundedness,
         )
 
+    # Citations are built from `groundedness.claim_verdicts`, not
+    # `generated.claims` directly: a claim's `chunk_id` may have been
+    # corrected by citation-rebind (see `libs.generation.groundedness`), in
+    # which case `generated.claims` still holds the original, failed
+    # chunk_id -- using it here would cite a source that was never actually
+    # verified to support the claim.
     payload_by_chunk_id = {r.payload["chunk_id"]: r.payload for r in results}
-    cited_chunk_ids = dict.fromkeys(claim.chunk_id for claim in generated.claims)
+    cited_chunk_ids = dict.fromkeys(v.claim.chunk_id for v in groundedness.claim_verdicts)
     citations = [payload_by_chunk_id[chunk_id] for chunk_id in cited_chunk_ids]
 
     logger.info(
-        "Answered %r: %d claims, %d unique citations, confidence=%.2f",
+        "Answered %r: %d claims, %d unique citations, confidence=%.2f, rebinds=%d",
         query_text,
         len(generated.claims),
         len(citations),
         groundedness.overall_confidence,
+        groundedness.rebind_count,
     )
     return AnswerResult(
         query=query_text,

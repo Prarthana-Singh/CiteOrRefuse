@@ -112,6 +112,37 @@ def test_answer_refuses_when_groundedness_check_fails(monkeypatch):
     assert result.groundedness.is_grounded is False
 
 
+def test_answer_citations_reflect_the_rebound_chunk_id_not_the_original(monkeypatch):
+    """If citation-rebind corrects a claim's chunk_id inside the
+    groundedness gate, the citation shown in the final AnswerResult must
+    reflect the corrected chunk -- not the original one generation picked,
+    which was never actually verified to support the claim.
+    """
+    results = [
+        _result("acme-10k:1:0", "Overview: we make robots and software."),
+        _result("acme-10k:8:5", "Segments: hardware and software, in detail."),
+    ]
+    monkeypatch.setattr(pipeline_module, "retrieve", lambda *a, **k: results)
+
+    generated = GeneratedAnswer(
+        answer="The segments are hardware and software.",
+        claims=[Claim(text="The segments are hardware and software.", chunk_id="acme-10k:1:0")],
+    )
+    openai_client = _FakeOpenAIClient(
+        [
+            generated,
+            _Verdict(False, 0.9),  # vs the claim's original (wrong) chunk
+            _Verdict(True, 1.0),  # rebind vs the other retrieved chunk -- succeeds
+        ]
+    )
+
+    result = answer("What are the segments?", None, openai_client, None, None)
+
+    assert result.answered is True
+    assert result.citations[0]["chunk_id"] == "acme-10k:8:5"
+    assert result.groundedness.rebind_count == 1
+
+
 def test_answer_refuses_when_confidence_is_below_threshold_even_if_supported(monkeypatch):
     """A claim can be marked `supported=True` by the judge but with low
     confidence -- the threshold check is a separate, additional guard on
