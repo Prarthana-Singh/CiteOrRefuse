@@ -1,0 +1,29 @@
+name: Eval Harness
+
+# Manually triggered, not run on every push/PR: this hits real OpenAI +
+# Cohere APIs (real cost, needs secrets configured), unlike `pytest tests/`
+# which never needs live keys. scripts/run_eval.py exits non-zero on any
+# case failure, so this job genuinely fails when the eval set regresses --
+# not just a report. Revisit manual-trigger-only once the eval set is
+# bigger and scores have been stable for a while.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run eval harness
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+        run: python scripts/run_eval.py

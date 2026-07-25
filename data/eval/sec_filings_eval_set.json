@@ -1,0 +1,128 @@
+[
+  {
+    "case_id": "clean-answer-net-sales-2025",
+    "query": "What were North America net sales in 2025?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["amzn-2025-10k:8:table:193", "amzn-2025-10k:7:table:61"],
+    "expected_answer_contains": ["426,305"],
+    "notes": "Clean on-topic case. Live-verified 2026-07-25: answered with confidence 1.00, citing amzn-2025-10k:8:table:193."
+  },
+  {
+    "case_id": "clean-refusal-off-topic",
+    "query": "What color is the sky on Mars?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "Clean off-topic case, not covered by any 10-K. Live-verified 2026-07-25: refused, confidence 0.00, zero claims generated."
+  },
+  {
+    "case_id": "adversarial-wrong-year",
+    "query": "What was Amazon's North America net sales in 2026?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "Topically on-target (retrieval surfaces real net-sales chunks) but the filing only covers FY2025. The single sharpest case in this set: the top-ranked retrieved candidate (score 0.7467, amzn-2025-10k:8:table:157) was a real numeric decoy -- a lease/debt maturity schedule that happens to contain the literal string '2026' plus a dollar figure, but is not a net-sales figure at all. Live-verified 2026-07-25: generation did not cite it, produced zero claims, correctly refused."
+  },
+  {
+    "case_id": "adversarial-undisclosed-metric",
+    "query": "What is Amazon's market share in the North America e-commerce market?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "Retrieval surfaces high-scoring, genuinely on-topic segment/net-sales tables (0.83-0.85) that a weaker system might spuriously ground a market-share claim in. Live-verified 2026-07-25: correctly refused, zero claims -- net sales/segment data is not the same thing as total market size or share."
+  },
+  {
+    "case_id": "adversarial-undisclosed-prime-count",
+    "query": "How many Amazon Prime members are there worldwide as of the end of 2025?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "Retrieval scores were noticeably weaker here (0.33-0.61) -- honest signal that nothing on-topic was actually indexed for this specific metric. Live-verified 2026-07-25: correctly refused, zero claims."
+  },
+  {
+    "case_id": "tesla-vehicle-deliveries-2025",
+    "query": "How many consumer vehicles did Tesla deliver in 2025?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["tsla-2025-10k:7:63"],
+    "expected_answer_contains": ["1.64 million"],
+    "notes": "BLIND case (written 2026-07-25 before running retrieve()/answer()): fact picked by reading Item 7 MD&A directly ('In 2025, we produced approximately 1.66 million consumer vehicles and delivered approximately 1.64 million consumer vehicles'). chunk_id resolved via a standalone chunk_filing_from_source() lookup only -- no retrieval/generation was run before writing this down."
+  },
+  {
+    "case_id": "tesla-reportable-segments",
+    "query": "What are Tesla's reportable business segments?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["tsla-2025-10k:1:0"],
+    "expected_answer_contains": ["automotive", "energy generation and storage"],
+    "notes": "BLIND case: fact picked from Item 1 Business ('We operate as two reportable segments: (i) automotive and (ii) energy generation and storage')."
+  },
+  {
+    "case_id": "tesla-wrong-year-revenue-2026",
+    "query": "What was Tesla's total revenue in fiscal year 2026?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "BLIND wrong-year decoy, mirrors the Amazon 2026 case. The filing states 2025 total revenues of $94.83 billion (a decrease of $2.86 billion vs. the prior year) -- no fiscal 2026 figures exist in this filing. Predicted refusal before running."
+  },
+  {
+    "case_id": "tesla-supercharger-count-ambiguous",
+    "query": "How many Supercharger stations did Tesla operate worldwide at the end of 2025?",
+    "expected_answered": false,
+    "notes": "GENUINELY UNCERTAIN -- recorded before running. Searched the filing text for every 'Supercharger' mention: found only qualitative language ('a growing global network of Tesla Superchargers') with no specific station count in Item 1 or Item 7. Predicting refusal on that basis, but this was not an exhaustive close-read of the full filing (Item 2 Properties, etc. weren't checked), so I would not be surprised by either outcome. This is the deliberately-uncertain case Task 2 asked for."
+  },
+  {
+    "case_id": "msft-cloud-revenue-growth",
+    "query": "How much did Microsoft Cloud revenue grow in fiscal year 2025?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["msft-2025-10k:7:63", "msft-2025-10k:7:64"],
+    "expected_answer_contains": ["23%"],
+    "notes": "BLIND case: fact picked from Item 7 MD&A fiscal-2025 highlights ('Microsoft Cloud revenue increased 23% to $168.9 billion')."
+  },
+  {
+    "case_id": "msft-reportable-segments",
+    "query": "What are Microsoft's reportable segments?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["msft-2025-10k:1:3", "msft-2025-10k:7:66"],
+    "expected_answer_contains": ["Productivity and Business Processes", "Intelligent Cloud", "More Personal Computing"],
+    "notes": "BLIND case: fact appears verbatim in both Item 1 Business and Item 7 MD&A ('Productivity and Business Processes, Intelligent Cloud, and More Personal Computing')."
+  },
+  {
+    "case_id": "msft-employee-count",
+    "query": "How many full-time employees did Microsoft have as of June 30, 2025?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["msft-2025-10k:1:11"],
+    "expected_answer_contains": ["228,000"],
+    "notes": "BLIND case: fact picked from Item 1 Business Human Capital section ('As of June 30, 2025, we employed approximately 228,000 people on a full-time basis')."
+  },
+  {
+    "case_id": "msft-wrong-year-cloud-revenue-2026",
+    "query": "What was Microsoft Cloud revenue in fiscal year 2026?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "BLIND wrong-year decoy. Filing covers fiscal year ended June 30, 2025 only -- no fiscal 2026 figures exist. Predicted refusal before running."
+  },
+  {
+    "case_id": "apple-total-net-sales-q2-2026",
+    "query": "What were Apple's total net sales for the three months ended March 28, 2026?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["aapl-2026-10q:2:table:49", "aapl-2026-10q:1:table:40"],
+    "expected_answer_contains": ["111,184"],
+    "notes": "BLIND case: fact picked from Item 2 MD&A's segment net-sales table (also appears in Item 1 financial-statement notes, hence two acceptable chunk_ids)."
+  },
+  {
+    "case_id": "apple-americas-net-sales-q2-2026",
+    "query": "What were Apple's net sales in the Americas segment for the three months ended March 28, 2026?",
+    "expected_answered": true,
+    "expected_chunk_ids": ["aapl-2026-10q:2:table:49", "aapl-2026-10q:1:table:40"],
+    "expected_answer_contains": ["45,093"],
+    "notes": "BLIND case, same segment table as apple-total-net-sales-q2-2026."
+  },
+  {
+    "case_id": "apple-wrong-period-full-fiscal-year-2026",
+    "query": "What were Apple's total net sales for the full fiscal year 2026?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "BLIND period-length decoy -- a different flavor from a wrong-year decoy: this is a 10-Q covering only a quarter (and six-month year-to-date) as of March 28, 2026, not a full fiscal year. Apple's fiscal 2026 would not even be complete as of this filing date (fiscal year end is late September). Predicted refusal before running."
+  },
+  {
+    "case_id": "apple-iphone-units-not-disclosed",
+    "query": "How many iPhone units did Apple sell in the quarter ended March 28, 2026?",
+    "expected_answered": false,
+    "assert_zero_claims": true,
+    "notes": "BLIND case: searched the filing text for 'units' and 'iphone unit' -- found nothing resembling a unit-sales disclosure. This filing reports net sales in dollars by segment/product category, not unit counts, as far as this document goes. Predicted refusal before running."
+  }
+]
