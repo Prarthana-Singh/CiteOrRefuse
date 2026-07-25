@@ -1,0 +1,1278 @@
+[
+  {
+    "run": 1,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "Tesla's Chief Executive Officer organizes the company and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "Tesla's Chief Executive Officer organizes the company and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 2,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 3,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 4,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "Our Chief Executive Officer, as the CODM, organizes our company, manages resource allocations and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "Our Chief Executive Officer, as the CODM, organizes our company, manages resource allocations and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 5,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 6,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      }
+    ],
+    "is_grounded": false,
+    "overall_confidence": 0.9,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": false,
+        "confidence": 0.9,
+        "reason": null
+      }
+    ],
+    "would_answer": false
+  },
+  {
+    "run": 7,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 8,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 9,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 10,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes sales, leasing, and financing of energy generation and storage products, services related to such products and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 11,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 12,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 13,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "Tesla's Chief Executive Officer organizes the company and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "Tesla's Chief Executive Officer organizes the company and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 14,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 0.95,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 0.95,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 15,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 0.95,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 0.95,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 16,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 17,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 18,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "Our Chief Executive Officer, as the CODM, organizes our company, manages resource allocations and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "Our Chief Executive Officer, as the CODM, organizes our company, manages resource allocations and measures performance among two operating and reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 19,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  },
+  {
+    "run": 20,
+    "retrieved_top5": [
+      {
+        "chunk_id": "tsla-2025-10k:8:253",
+        "score": 0.880808
+      },
+      {
+        "chunk_id": "tsla-2025-10k:1:0",
+        "score": 0.816304
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:table:255",
+        "score": 0.704832
+      },
+      {
+        "chunk_id": "tsla-2025-10k:2:55",
+        "score": 0.659669
+      },
+      {
+        "chunk_id": "tsla-2025-10k:8:256",
+        "score": 0.633706
+      }
+    ],
+    "generated_answer": "Tesla's reportable business segments are (i) automotive and (ii) energy generation and storage.",
+    "claims": [
+      {
+        "text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0"
+      },
+      {
+        "text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      },
+      {
+        "text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253"
+      }
+    ],
+    "is_grounded": true,
+    "overall_confidence": 1.0,
+    "claim_verdicts": [
+      {
+        "claim_text": "Tesla operates as two reportable segments: (i) automotive and (ii) energy generation and storage.",
+        "chunk_id": "tsla-2025-10k:1:0",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The automotive segment includes the design, development, manufacturing, sales and leasing of electric vehicles as well as sales of automotive regulatory credits, services and other related revenues.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      },
+      {
+        "claim_text": "The energy generation and storage segment includes the design, manufacture, installation, sales and leasing of energy generation and storage products and related services and sales of energy generation incentives.",
+        "chunk_id": "tsla-2025-10k:8:253",
+        "supported": true,
+        "confidence": 1.0,
+        "reason": null
+      }
+    ],
+    "would_answer": true
+  }
+]
