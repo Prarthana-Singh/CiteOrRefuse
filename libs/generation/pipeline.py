@@ -22,6 +22,13 @@ class AnswerResult(BaseModel):
     on the no-candidates-retrieved refusal path), even when the answer was
     refused, so callers can inspect *why* -- which claim(s) failed, and
     whether it was a hallucinated citation or a judge's low-confidence call.
+
+    `retrieved_chunk_ids` is the raw top-K retrieved chunk_ids, always
+    populated (even on refusal) -- callers that need retrieval recall
+    independent of whether generation ultimately answered or refused (e.g.
+    `libs.eval.harness`) can read it here instead of calling `retrieve()`
+    a second time, which would double the Cohere rerank calls this
+    pipeline makes per query.
     """
 
     query: str
@@ -30,6 +37,7 @@ class AnswerResult(BaseModel):
     citations: list[dict] | None = None
     refusal_reason: str | None = None
     groundedness: GroundednessResult | None = None
+    retrieved_chunk_ids: list[str] = []
 
 
 def answer(
@@ -42,11 +50,13 @@ def answer(
 ) -> AnswerResult:
     """The full "cite or refuse" pipeline for a single query."""
     results = retrieve(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k)
+    retrieved_chunk_ids = [r.payload["chunk_id"] for r in results]
     if not results:
         return AnswerResult(
             query=query_text,
             answered=False,
             refusal_reason="No relevant sources were found for this question.",
+            retrieved_chunk_ids=retrieved_chunk_ids,
         )
 
     context = build_context(results)
@@ -65,6 +75,7 @@ def answer(
             answered=False,
             refusal_reason=groundedness_settings.refusal_message,
             groundedness=groundedness,
+            retrieved_chunk_ids=retrieved_chunk_ids,
         )
 
     # Citations are built from `groundedness.claim_verdicts`, not
@@ -91,4 +102,5 @@ def answer(
         answer=generated.answer,
         citations=citations,
         groundedness=groundedness,
+        retrieved_chunk_ids=retrieved_chunk_ids,
     )

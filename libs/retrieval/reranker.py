@@ -13,9 +13,29 @@ logger = get_logger(__name__)
 # across several cases/queries can burst past that easily. Retrying a 429
 # with backoff is cheap insurance against a transient rate limit derailing
 # an otherwise-working run -- not a workaround for a real quota problem
-# (a production key wouldn't hit this in normal usage).
+# (a production key wouldn't hit this in normal usage). The eval harness
+# (libs.eval.harness) now also paces itself proactively between cases, so
+# this retry path is a fallback for a burst it doesn't fully prevent, not
+# the primary defense.
 _MAX_RETRIES = 3
 _RETRY_DELAY_SECONDS = 7
+
+
+def _retry_after_seconds(error: cohere.TooManyRequestsError) -> float | None:
+    """Reads a `Retry-After` response header off a 429, if Cohere sent one,
+    so backoff is based on the server's actual reset hint instead of always
+    guessing `_RETRY_DELAY_SECONDS`. Header lookup is case-insensitive since
+    `error.headers` is a plain dict here, not a case-insensitive HTTP header
+    mapping.
+    """
+    headers = error.headers or {}
+    for key, value in headers.items():
+        if key.lower() == "retry-after":
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return None
+    return None
 
 
 class RerankedCandidate(NamedTuple):
@@ -50,16 +70,18 @@ def rerank(
                 top_n=min(top_n, len(documents)) if top_n is not None else len(documents),
             )
             break
-        except cohere.TooManyRequestsError:
+        except cohere.TooManyRequestsError as error:
             if attempt == _MAX_RETRIES:
                 raise
+            delay = _retry_after_seconds(error)
             logger.warning(
-                "Cohere rerank rate-limited, retrying in %ds (attempt %d/%d)",
-                _RETRY_DELAY_SECONDS,
+                "Cohere rerank rate-limited, retrying in %.1fs (attempt %d/%d)%s",
+                delay if delay is not None else _RETRY_DELAY_SECONDS,
                 attempt + 1,
                 _MAX_RETRIES,
+                " [server Retry-After]" if delay is not None else " [default backoff]",
             )
-            time.sleep(_RETRY_DELAY_SECONDS)
+            time.sleep(delay if delay is not None else _RETRY_DELAY_SECONDS)
     return [
         RerankedCandidate(index=result.index, relevance_score=result.relevance_score)
         for result in response.results

@@ -1,6 +1,10 @@
 from types import SimpleNamespace
 
+import cohere
+import pytest
+
 from libs.core.config import retrieval_settings
+from libs.retrieval import reranker as reranker_module
 from libs.retrieval.reranker import rerank
 
 
@@ -65,3 +69,60 @@ def test_rerank_default_top_n_is_all_documents():
     rerank("query", ["a", "b", "c"], client)
 
     assert client.calls[0]["top_n"] == 3
+
+
+class _FlakyCohereClient:
+    """Raises `TooManyRequestsError` on the first `fail_count` calls, then
+    succeeds -- simulates a trial-tier rate limit that clears after a
+    retry."""
+
+    def __init__(self, fail_count: int, headers: dict | None = None):
+        self._fail_count = fail_count
+        self._headers = headers
+        self.calls = 0
+
+    def rerank(self, *, model, query, documents, top_n):
+        self.calls += 1
+        if self.calls <= self._fail_count:
+            raise cohere.TooManyRequestsError(body="rate limited", headers=self._headers)
+        return SimpleNamespace(results=[SimpleNamespace(index=0, relevance_score=0.9)])
+
+
+def test_rerank_retries_on_rate_limit_and_eventually_succeeds(monkeypatch):
+    monkeypatch.setattr(reranker_module.time, "sleep", lambda seconds: None)
+    client = _FlakyCohereClient(fail_count=2)
+
+    results = rerank("query", ["doc a"], client, top_n=1)
+
+    assert results[0].relevance_score == 0.9
+    assert client.calls == 3
+
+
+def test_rerank_raises_after_exhausting_retries(monkeypatch):
+    monkeypatch.setattr(reranker_module.time, "sleep", lambda seconds: None)
+    client = _FlakyCohereClient(fail_count=reranker_module._MAX_RETRIES + 1)
+
+    with pytest.raises(cohere.TooManyRequestsError):
+        rerank("query", ["doc a"], client, top_n=1)
+
+    assert client.calls == reranker_module._MAX_RETRIES + 1
+
+
+def test_rerank_backs_off_using_server_retry_after_header_when_present(monkeypatch):
+    sleep_calls = []
+    monkeypatch.setattr(reranker_module.time, "sleep", sleep_calls.append)
+    client = _FlakyCohereClient(fail_count=1, headers={"Retry-After": "3"})
+
+    rerank("query", ["doc a"], client, top_n=1)
+
+    assert sleep_calls == [3.0]
+
+
+def test_rerank_falls_back_to_default_backoff_when_no_retry_after_header(monkeypatch):
+    sleep_calls = []
+    monkeypatch.setattr(reranker_module.time, "sleep", sleep_calls.append)
+    client = _FlakyCohereClient(fail_count=1, headers=None)
+
+    rerank("query", ["doc a"], client, top_n=1)
+
+    assert sleep_calls == [reranker_module._RETRY_DELAY_SECONDS]
