@@ -171,11 +171,8 @@ the caller explicitly passes back the `filing_id` `/ingest` returned. The
 core `retrieve()`/`hybrid_search()` functions gained an optional
 `filing_ids` filter to make this possible (a Qdrant payload filter on
 `filing_id`) — off by default, so every pre-Phase-7 caller of
-`retrieve()`/`answer()` is unaffected. `streamlit_app.py` is a thin
-client over both endpoints (upload widget → `/ingest`, question box →
-`/answer` scoped to the returned `filing_id`) with no business logic of
-its own — manually verified, not unit-tested, since there's no logic in
-it to test beyond what `tests/api` already covers.
+`retrieve()`/`answer()` is unaffected. There is no frontend; FastAPI's
+`/docs` Swagger UI, curl, or direct Python calls are the only interfaces.
 
 See the README for this layer's other current limitations (no auth, no
 persistent storage, no PDF support, synchronous request handling).

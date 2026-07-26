@@ -23,7 +23,7 @@ tool that admits when it doesn't know.
 
 Full walkthrough with a diagram: [docs/architecture.md](docs/architecture.md).
 
-Five layers, built and tested in order, each hardened before the next was
+Six layers, built and tested in order, each hardened before the next was
 built on top of it:
 
 1. **Ingestion** (`libs/ingestion`, `libs/chunking`) — parses real EDGAR
@@ -45,9 +45,8 @@ built on top of it:
 6. **Serving** (`libs/api`) — a FastAPI wrapper: `POST /answer` (the same
    pipeline every script above already calls) plus `POST /ingest`, a
    real user-facing upload path onto Phase 1/2's *unchanged* ingestion and
-   indexing functions. A minimal Streamlit app (`streamlit_app.py`) is a
-   thin client over both endpoints — see Limitations for what this layer
-   does and doesn't do yet.
+   indexing functions — see Limitations for what this layer does and
+   doesn't do yet.
 
 ## Why this is harder than a typical RAG tutorial
 
@@ -171,9 +170,9 @@ alongside the rebind logic itself.
   of just internal fixtures — verified live by uploading a real 10-Q
   through the running endpoint and confirming a clean, specific 422
   rather than a crash or a plausible-looking wrong answer.
-- **The Streamlit frontend is manually verified only.** It's a thin
-  display layer over `/ingest` and `/answer` with no business logic of its
-  own to unit test; `tests/api` already covers everything it calls.
+- **There is no frontend.** FastAPI's own `/docs` Swagger UI, curl, or
+  direct Python calls are the only interfaces; a thin client was tried and
+  removed as out of scope for this project.
 - **140 tests pass** (`pytest tests/`), none requiring a live API key or a
   running Qdrant instance — every layer, including the API layer, is
   independently testable with injected fakes/dependency overrides. Live

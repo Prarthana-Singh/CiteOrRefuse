@@ -24,10 +24,6 @@ dev = [
     "pytest-cov>=5.0",
     "httpx>=0.27",
 ]
-frontend = [
-    "streamlit>=1.36",
-    "requests>=2.32",
-]
 
 [tool.setuptools.packages.find]
 include = ["libs*"]
