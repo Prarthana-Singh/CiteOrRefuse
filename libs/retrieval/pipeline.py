@@ -30,12 +30,20 @@ def retrieve(
     sparse_model: SparseTextEmbedding,
     cohere_client: cohere.ClientV2,
     top_k: int | None = None,
+    filing_ids: list[str] | None = None,
 ) -> list[RetrievedResult]:
     """Hybrid dense+BM25 retrieval (Qdrant RRF fusion) -> Cohere rerank ->
     top-K, in descending relevance order.
+
+    `filing_ids`, when given, restricts retrieval to just those filings --
+    see `libs.retrieval.hybrid_search`. Defaults to None (no restriction,
+    search the whole collection), the same behavior this function has
+    always had -- purely additive.
     """
     top_k = top_k or retrieval_settings.default_top_k
-    candidates = hybrid_search(query_text, qdrant_client, openai_client, sparse_model)
+    candidates = hybrid_search(
+        query_text, qdrant_client, openai_client, sparse_model, filing_ids=filing_ids
+    )
     if not candidates:
         logger.info("Retrieval for %r returned no candidates", query_text)
         return []

@@ -10,6 +10,7 @@ from libs.chunking.pipeline import chunk_filing_from_source
 from libs.core.config import embedding_settings, vectorstore_settings
 from libs.core.models import Filing
 from libs.indexing.pipeline import index_filing
+from libs.retrieval import pipeline as pipeline_module
 from libs.retrieval.pipeline import retrieve
 
 _FIXTURES_DIR = Path(__file__).parents[2] / "data" / "fixtures"
@@ -112,3 +113,31 @@ def test_retrieve_respects_top_k(indexed_amazon_filing, sparse_model):
     )
 
     assert len(results) == 2
+
+
+def test_retrieve_forwards_filing_ids_to_hybrid_search(monkeypatch):
+    captured = {}
+
+    def fake_hybrid_search(query_text, qdrant_client, openai_client, sparse_model, filing_ids=None):
+        captured["filing_ids"] = filing_ids
+        return []
+
+    monkeypatch.setattr(pipeline_module, "hybrid_search", fake_hybrid_search)
+
+    retrieve("q", None, None, None, _FakeCohereClient(), filing_ids=["upload-abc"])
+
+    assert captured["filing_ids"] == ["upload-abc"]
+
+
+def test_retrieve_defaults_filing_ids_to_none(monkeypatch):
+    captured = {}
+
+    def fake_hybrid_search(query_text, qdrant_client, openai_client, sparse_model, filing_ids=None):
+        captured["filing_ids"] = filing_ids
+        return []
+
+    monkeypatch.setattr(pipeline_module, "hybrid_search", fake_hybrid_search)
+
+    retrieve("q", None, None, None, _FakeCohereClient())
+
+    assert captured["filing_ids"] is None

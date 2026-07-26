@@ -73,9 +73,24 @@ class GroundednessSettings(BaseSettings):
     )
 
 
+class IngestSettings(BaseSettings):
+    """Guardrails for `POST /ingest` specifically -- ingestion is the
+    expensive (real embedding calls) and abusable (arbitrary uploaded
+    content) operation in the API layer, unlike `/answer` against
+    already-indexed content.
+    """
+
+    model_config = SettingsConfigDict(env_prefix="CITEORREFUSE_INGEST_")
+
+    max_upload_bytes: int = 10_000_000  # existing real fixtures range ~1-8MB
+    rate_limit_max_calls: int = 5
+    rate_limit_window_seconds: float = 60.0
+
+
 settings = ChunkingSettings()
 embedding_settings = EmbeddingSettings()
 vectorstore_settings = VectorStoreSettings()
 retrieval_settings = RetrievalSettings()
 generation_settings = GenerationSettings()
 groundedness_settings = GroundednessSettings()
+ingest_settings = IngestSettings()

@@ -47,9 +47,19 @@ def answer(
     sparse_model: SparseTextEmbedding,
     cohere_client: cohere.ClientV2,
     top_k: int | None = None,
+    filing_ids: list[str] | None = None,
 ) -> AnswerResult:
-    """The full "cite or refuse" pipeline for a single query."""
-    results = retrieve(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k)
+    """The full "cite or refuse" pipeline for a single query.
+
+    `filing_ids`, when given, scopes retrieval to just those filings (see
+    `libs.retrieval.pipeline.retrieve`) -- e.g. answering against one
+    just-uploaded filing rather than everything in the shared collection.
+    Defaults to None (no restriction), identical to this function's
+    behavior before this parameter existed.
+    """
+    results = retrieve(
+        query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids
+    )
     retrieved_chunk_ids = [r.payload["chunk_id"] for r in results]
     if not results:
         return AnswerResult(

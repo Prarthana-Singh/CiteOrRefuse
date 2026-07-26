@@ -42,9 +42,12 @@ built on top of it:
 5. **Eval / CI** (`libs/eval`, `.github/workflows/eval.yml`) — a
    hand-verified Q&A regression suite run against the real pipeline, gating
    on exit code.
-6. **Serving** (`libs/api`) — a FastAPI wrapper (`POST /answer`) around the
-   same `answer()` pipeline every script above already calls; see
-   Limitations for what this layer does and doesn't do yet.
+6. **Serving** (`libs/api`) — a FastAPI wrapper: `POST /answer` (the same
+   pipeline every script above already calls) plus `POST /ingest`, a
+   real user-facing upload path onto Phase 1/2's *unchanged* ingestion and
+   indexing functions. A minimal Streamlit app (`streamlit_app.py`) is a
+   thin client over both endpoints — see Limitations for what this layer
+   does and doesn't do yet.
 
 ## Why this is harder than a typical RAG tutorial
 
@@ -146,15 +149,35 @@ alongside the rebind logic itself.
   metrics. This is recorded in `libs/generation/groundedness.py`'s module
   docstring and in the affected eval case's notes, not silently left
   implicit.
-- **The API layer is a demo wrapper, not a production service.** `libs/api`
-  serves the same 4 fixture filings the eval harness runs against (there is
-  no endpoint to ingest a new filing yet), indexed into an in-memory Qdrant
-  collection lazily on the first request — that index is lost on restart,
-  not persisted anywhere. Requests are handled synchronously with no auth,
-  no rate limiting, and no request queuing of its own; it inherits whatever
-  latency and rate limits OpenAI/Cohere impose underneath.
-- **125 tests pass** (`pytest tests/`), none requiring a live API key or a
+- **The API layer is a demo service, not a production one.** The 4 fixture
+  filings are indexed into an in-memory Qdrant collection lazily on the
+  first request; `POST /ingest` adds real uploads to that same in-memory
+  collection, but nothing is persisted to disk, so a process restart loses
+  everything (fixtures re-index automatically; uploads don't). There's no
+  auth, and `/answer` itself has no rate limiting or request queuing (only
+  `/ingest` does, being the expensive/abusable operation) — it inherits
+  whatever latency and rate limits OpenAI/Cohere impose underneath.
+- **Ingestion is HTML-only and session-scoped, by design, not as a gap.**
+  `POST /ingest` accepts `.htm`/`.html` 10-Ks only (PDF support is a
+  different, larger project — a different parser, different structure
+  assumptions throughout ingestion/chunking). An uploaded filing is
+  retrievable only by a caller who passes back its `filing_id`; an
+  unscoped `/answer` query always stays pinned to the 4 baked-in fixtures,
+  never picking up someone else's upload, and nothing about the uploaded
+  filing is deleted or cleaned up afterward — the simplest safe option at
+  this project's scale, not a real multi-tenant access-control model.
+- **The existing `UnsupportedDocumentTypeError` guard is the only content
+  safety net**, now doing real work against arbitrary user uploads instead
+  of just internal fixtures — verified live by uploading a real 10-Q
+  through the running endpoint and confirming a clean, specific 422
+  rather than a crash or a plausible-looking wrong answer.
+- **The Streamlit frontend is manually verified only.** It's a thin
+  display layer over `/ingest` and `/answer` with no business logic of its
+  own to unit test; `tests/api` already covers everything it calls.
+- **140 tests pass** (`pytest tests/`), none requiring a live API key or a
   running Qdrant instance — every layer, including the API layer, is
   independently testable with injected fakes/dependency overrides. Live
   verification against real OpenAI/Cohere/Qdrant has been run manually at
-  each phase, not continuously.
+  each phase, including uploading a real, never-before-used 10-K (NVIDIA,
+  fetched fresh from EDGAR) through the running API and getting a
+  correctly grounded, cited answer back on genuinely new input.

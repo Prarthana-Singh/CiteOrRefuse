@@ -116,3 +116,71 @@ def test_hybrid_search_respects_the_limit_argument(seeded_client, sparse_model):
     )
 
     assert len(results) == 1
+
+
+_OTHER_FILING = Filing(filing_id="upload-xyz", company="Other Co.", source_path="y.html")
+
+
+@pytest.fixture
+def seeded_client_two_filings(monkeypatch, sparse_model) -> QdrantClient:
+    """Two filings in the same collection -- acme-10k (the default fixture
+    set here) plus a second, unrelated one -- so filing_ids scoping can be
+    verified to actually exclude the other filing's points, not just
+    happen to return fewer results by coincidence.
+    """
+    monkeypatch.setattr(embedding_settings, "dimensions", _DIM)
+    client = QdrantClient(":memory:")
+
+    acme_chunks = [_chunk(0, "North America net sales grew twelve percent this year.")]
+    acme_vectors = [_deterministic_vector(build_text(c)) for c in acme_chunks]
+    upsert_chunks(acme_chunks, acme_vectors, _FILING, client, sparse_model)
+
+    other_chunk = Chunk(
+        chunk_id="upload-xyz:1:0",
+        filing_id="upload-xyz",
+        chunk_type=ChunkType.TEXT,
+        section_item_code="1",
+        section_title="Business",
+        part="I",
+        order_index=0,
+        char_start=0,
+        char_end=10,
+        token_count=5,
+        text="North America net sales also grew for this other company.",
+    )
+    other_vector = [_deterministic_vector(
+        f"{_OTHER_FILING.company} {_OTHER_FILING.form_type}, 1 Business: {other_chunk.text}"
+    )]
+    upsert_chunks([other_chunk], other_vector, _OTHER_FILING, client, sparse_model)
+
+    return client
+
+
+def test_hybrid_search_with_no_filing_ids_searches_the_whole_collection(
+    seeded_client_two_filings, sparse_model
+):
+    fake_client = _FakeOpenAIClient()
+
+    results = hybrid_search(
+        "North America net sales", seeded_client_two_filings, fake_client, sparse_model
+    )
+
+    filing_ids_seen = {r.payload["filing_id"] for r in results}
+    assert filing_ids_seen == {"acme-10k", "upload-xyz"}
+
+
+def test_hybrid_search_with_filing_ids_excludes_other_filings(
+    seeded_client_two_filings, sparse_model
+):
+    fake_client = _FakeOpenAIClient()
+
+    results = hybrid_search(
+        "North America net sales",
+        seeded_client_two_filings,
+        fake_client,
+        sparse_model,
+        filing_ids=["acme-10k"],
+    )
+
+    assert len(results) > 0
+    assert all(r.payload["filing_id"] == "acme-10k" for r in results)

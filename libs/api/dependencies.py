@@ -20,7 +20,8 @@ from fastapi import Depends
 from openai import OpenAI
 from qdrant_client import QdrantClient
 
-from libs.core.config import vectorstore_settings
+from libs.api.rate_limit import FixedWindowRateLimiter
+from libs.core.config import ingest_settings, vectorstore_settings
 from libs.indexing.fixtures import index_all_fixtures
 
 
@@ -47,3 +48,11 @@ def get_qdrant_client(
     client = QdrantClient(":memory:")
     index_all_fixtures(openai_client, client, sparse_model)
     return client
+
+
+@lru_cache
+def get_ingest_rate_limiter() -> FixedWindowRateLimiter:
+    return FixedWindowRateLimiter(
+        max_calls=ingest_settings.rate_limit_max_calls,
+        window_seconds=ingest_settings.rate_limit_window_seconds,
+    )

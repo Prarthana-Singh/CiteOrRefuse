@@ -143,6 +143,34 @@ def test_answer_citations_reflect_the_rebound_chunk_id_not_the_original(monkeypa
     assert result.groundedness.rebind_count == 1
 
 
+def test_answer_forwards_filing_ids_to_retrieve(monkeypatch):
+    captured = {}
+
+    def fake_retrieve(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
+        captured["filing_ids"] = filing_ids
+        return []
+
+    monkeypatch.setattr(pipeline_module, "retrieve", fake_retrieve)
+
+    answer("q", None, None, None, None, filing_ids=["upload-abc"])
+
+    assert captured["filing_ids"] == ["upload-abc"]
+
+
+def test_answer_defaults_filing_ids_to_none(monkeypatch):
+    captured = {}
+
+    def fake_retrieve(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
+        captured["filing_ids"] = filing_ids
+        return []
+
+    monkeypatch.setattr(pipeline_module, "retrieve", fake_retrieve)
+
+    answer("q", None, None, None, None)
+
+    assert captured["filing_ids"] is None
+
+
 def test_answer_refuses_when_confidence_is_below_threshold_even_if_supported(monkeypatch):
     """A claim can be marked `supported=True` by the judge but with low
     confidence -- the threshold check is a separate, additional guard on
