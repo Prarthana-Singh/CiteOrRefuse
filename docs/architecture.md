@@ -1,6 +1,6 @@
 # Architecture
 
-CiteOrRefuse is five layers, each built and tested independently before the
+CiteOrRefuse is six layers, each built and tested independently before the
 next one was built on top of it. No layer assumes the one below it is
 perfect — the ingestion layer was hardened against four real filings before
 embedding started, and the generation layer's groundedness gate exists
@@ -40,11 +40,18 @@ flowchart TD
     end
 
     subgraph EvalCI["5. Eval / CI (libs/eval, .github/workflows/eval.yml)"]
-        R[EvalCase: query +<br/>expected behavior] --> S[run_eval:<br/>retrieve + answer]
+        R[EvalCase: query +<br/>expected behavior] --> S[run_eval: answer<br/>+ retrieved_chunk_ids]
         O --> S
         P --> S
         S --> T[score_case: refusal-correctness,<br/>retrieval recall, citation, content]
         T --> U[exit 0 / exit 1]
+    end
+
+    subgraph Serving["6. Serving (libs/api)"]
+        V[POST /answer request] --> W[FastAPI route: same<br/>answer as above]
+        O --> W
+        P --> W
+        W --> X[JSON response]
     end
 ```
 
@@ -109,11 +116,32 @@ hedged guess.
 ## 5. Eval / CI — `libs/eval`, `.github/workflows/eval.yml`
 
 `EvalCase`s (query + expected behavior, optionally expected citations and
-answer content) get run through the real `retrieve()` + `answer()`
-pipeline; `score_case` checks four independent things — did it
-answer/refuse correctly, was the expected chunk actually retrieved, was it
-actually cited, did the answer contain the expected content — and
-`scripts/run_eval.py` exits non-zero if any case fails. The GitHub Actions
-workflow is `workflow_dispatch`-only (manually triggered, not on every
-PR) — see the README for why, and for the current honest limitations of
-this layer.
+answer content) get run through the real `answer()` pipeline once per
+case; `AnswerResult.retrieved_chunk_ids` gives `score_case` the raw
+top-K retrieved chunk_ids without a second `retrieve()` call (an earlier
+version called `retrieve()` separately for this, which silently doubled
+the Cohere rerank calls made per case and caused real rate-limit failures
+against Cohere's trial tier — see the README). `score_case` checks four
+independent things — did it answer/refuse correctly, was the expected
+chunk actually retrieved, was it actually cited, did the answer contain
+the expected content — and `scripts/run_eval.py` exits non-zero if any
+case fails. The GitHub Actions workflow is `workflow_dispatch`-only
+(manually triggered, not on every PR) — see the README for why, and for
+the current honest limitations of this layer.
+
+## 6. Serving — `libs/api`
+
+A thin FastAPI wrapper: `POST /answer` takes a query (and optional
+`top_k`), resolves the same OpenAI/Qdrant/fastembed/Cohere clients every
+script above constructs, and calls the same `answer()` function —
+`AnswerResult` is returned directly as the JSON response, no separate API
+schema duplicating its shape. Clients are `lru_cache`-backed singletons
+wired through FastAPI's dependency injection (`libs/api/dependencies.py`),
+each independently overridable in tests, so route tests never need real
+API keys, the same guarantee every other layer's tests already have. The
+in-memory Qdrant collection is indexed with the same 4 fixture filings
+`scripts/run_eval.py` uses (`libs/indexing/fixtures.py`) lazily, on the
+first request — there's no endpoint to ingest a new filing yet, and the
+index doesn't survive a process restart. See the README for this layer's
+other current limitations (no auth, no rate limiting, synchronous request
+handling).
