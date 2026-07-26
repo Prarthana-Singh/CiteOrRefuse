@@ -42,8 +42,9 @@ built on top of it:
 5. **Eval / CI** (`libs/eval`, `.github/workflows/eval.yml`) — a
    hand-verified Q&A regression suite run against the real pipeline, gating
    on exit code.
-
-There is currently **no serving/API layer** — see Limitations.
+6. **Serving** (`libs/api`) — a FastAPI wrapper (`POST /answer`) around the
+   same `answer()` pipeline every script above already calls; see
+   Limitations for what this layer does and doesn't do yet.
 
 ## Why this is harder than a typical RAG tutorial
 
@@ -145,11 +146,15 @@ alongside the rebind logic itself.
   metrics. This is recorded in `libs/generation/groundedness.py`'s module
   docstring and in the affected eval case's notes, not silently left
   implicit.
-- **No serving/API layer.** FastAPI was named in the original project
-  scope but hasn't been built; the pipeline is currently invoked directly
-  via scripts (`scripts/answer_amazon_fixture.py`, `scripts/run_eval.py`),
-  not a running service.
-- **113 tests pass** (`pytest tests/`), none requiring a live API key or a
-  running Qdrant instance — every layer is independently testable with
-  injected fakes. Live verification against real OpenAI/Cohere/Qdrant has
-  been run manually at each phase, not continuously.
+- **The API layer is a demo wrapper, not a production service.** `libs/api`
+  serves the same 4 fixture filings the eval harness runs against (there is
+  no endpoint to ingest a new filing yet), indexed into an in-memory Qdrant
+  collection lazily on the first request — that index is lost on restart,
+  not persisted anywhere. Requests are handled synchronously with no auth,
+  no rate limiting, and no request queuing of its own; it inherits whatever
+  latency and rate limits OpenAI/Cohere impose underneath.
+- **125 tests pass** (`pytest tests/`), none requiring a live API key or a
+  running Qdrant instance — every layer, including the API layer, is
+  independently testable with injected fakes/dependency overrides. Live
+  verification against real OpenAI/Cohere/Qdrant has been run manually at
+  each phase, not continuously.
