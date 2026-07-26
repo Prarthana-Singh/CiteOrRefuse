@@ -176,3 +176,28 @@ core `retrieve()`/`hybrid_search()` functions gained an optional
 
 See the README for this layer's other current limitations (no auth, no
 persistent storage, no PDF support, synchronous request handling).
+
+## Data storage: why no Postgres or S3
+
+The original spec (`project_idea.txt`) named PostgreSQL for metadata and
+S3 for document storage. Both were deliberately not built — a closed
+decision, not an oversight or an open question:
+
+- **Postgres** would have stored per-chunk metadata for lookup alongside
+  the vector index. That need is already met: every Qdrant point's
+  payload carries company, form type, filing date, Part, Item, section
+  title, char offsets, and the chunk's own text (section 2) — a citation
+  is reconstructed from the same query that retrieved it, no second
+  lookup, no second system to keep in sync. The one thing that *would*
+  justify Postgres is a genuine query-log/audit-trail feature (a
+  persisted record of who asked what and which citation came back) — but
+  no such feature exists anywhere in this project today, in the API or
+  otherwise, so there is currently nothing concrete pulling it back in.
+  If an audit trail becomes an actual requirement, that's the trigger to
+  revisit this, not "metadata" in the abstract.
+- **S3** would only matter once persistence across process restarts is
+  itself a goal. It deliberately isn't, at this project's scale: Qdrant
+  runs `:memory:` only, fixture filings re-index on every process start,
+  and `POST /ingest` uploads are never written anywhere durable (see the
+  README's serving-layer limitations). S3 without that persistence goal
+  would have nothing to actually persist.

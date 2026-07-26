@@ -173,6 +173,18 @@ alongside the rebind logic itself.
 - **There is no frontend.** FastAPI's own `/docs` Swagger UI, curl, or
   direct Python calls are the only interfaces; a thin client was tried and
   removed as out of scope for this project.
+- **Postgres and S3 were consciously not pursued — a closed decision, not
+  an open question.** The original spec named both. Qdrant's payloads
+  already carry every citation-relevant metadata field (company, section,
+  char offsets, chunk text) that Postgres would have served, so a second
+  system would duplicate data Qdrant already serves atomically with the
+  vector search itself. S3 would only matter for persistence across
+  restarts, which was never a goal at this scale — everything is
+  deliberately ephemeral/in-memory already (see above). Neither the API
+  nor the docs implement any query-log or audit-trail feature today, so
+  there's no concrete use case pulling Postgres back in either; see
+  `docs/architecture.md` for the full reasoning and what would actually
+  justify revisiting this.
 - **140 tests pass** (`pytest tests/`), none requiring a live API key or a
   running Qdrant instance — every layer, including the API layer, is
   independently testable with injected fakes/dependency overrides. Live
