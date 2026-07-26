@@ -52,6 +52,12 @@ flowchart TD
         O --> W
         P --> W
         W --> X[JSON response]
+
+        Y[POST /ingest: uploaded .htm] --> Z[ingest_filing + chunk_filing<br/>Phase 1, unchanged]
+        Z --> AA[index_filing<br/>Phase 2, unchanged]
+        AA -.-> G
+        AA --> AB[filing_id back to caller]
+        AB -.->|passed as filing_id| V
     end
 ```
 
@@ -132,16 +138,44 @@ the current honest limitations of this layer.
 ## 6. Serving — `libs/api`
 
 A thin FastAPI wrapper: `POST /answer` takes a query (and optional
-`top_k`), resolves the same OpenAI/Qdrant/fastembed/Cohere clients every
-script above constructs, and calls the same `answer()` function —
-`AnswerResult` is returned directly as the JSON response, no separate API
-schema duplicating its shape. Clients are `lru_cache`-backed singletons
-wired through FastAPI's dependency injection (`libs/api/dependencies.py`),
-each independently overridable in tests, so route tests never need real
-API keys, the same guarantee every other layer's tests already have. The
-in-memory Qdrant collection is indexed with the same 4 fixture filings
-`scripts/run_eval.py` uses (`libs/indexing/fixtures.py`) lazily, on the
-first request — there's no endpoint to ingest a new filing yet, and the
-index doesn't survive a process restart. See the README for this layer's
-other current limitations (no auth, no rate limiting, synchronous request
-handling).
+`top_k`/`filing_id`), resolves the same OpenAI/Qdrant/fastembed/Cohere
+clients every script above constructs, and calls the same `answer()`
+function — `AnswerResult` is returned directly as the JSON response, no
+separate API schema duplicating its shape. Clients are `lru_cache`-backed
+singletons wired through FastAPI's dependency injection
+(`libs/api/dependencies.py`), each independently overridable in tests, so
+route tests never need real API keys, the same guarantee every other
+layer's tests already have. The in-memory Qdrant collection is indexed
+with the same 4 fixture filings `scripts/run_eval.py` uses
+(`libs/indexing/fixtures.py`) lazily, on the first request.
+
+`POST /ingest` (Phase 7) is a real upload path onto that same collection:
+it writes the uploaded bytes to a temp file, builds a `Filing` with
+`form_type="10-K"` fixed (never taken from the request), and calls Phase
+1's `ingest_filing()` + `chunk_filing()` and Phase 2's `index_filing()`
+directly — no new pipeline logic, just a new entry point. The existing
+`UnsupportedDocumentTypeError` guard (see section 1) does real work here:
+a non-10-K upload is rejected with a specific, human-readable 422, not a
+crash or a plausible-looking wrong answer built on a section structure
+the detector wasn't designed for. Two guardrails specific to this
+endpoint: a byte-capped read (`ingest_settings.max_upload_bytes`, checked
+before parsing even starts) and a fixed-window per-client rate limit
+(`libs/api/rate_limit.py`) — deliberately only on `/ingest`, since it's
+the expensive (real embedding calls) and abusable operation, unlike
+`/answer` against already-indexed content.
+
+An uploaded filing is session-scoped by construction, not by an actual
+session/auth mechanism: `/answer` defaults to searching only the 4 baked-
+in fixture filing_ids (`_FIXTURE_FILING_IDS` in `libs/api/app.py`) unless
+the caller explicitly passes back the `filing_id` `/ingest` returned. The
+core `retrieve()`/`hybrid_search()` functions gained an optional
+`filing_ids` filter to make this possible (a Qdrant payload filter on
+`filing_id`) — off by default, so every pre-Phase-7 caller of
+`retrieve()`/`answer()` is unaffected. `streamlit_app.py` is a thin
+client over both endpoints (upload widget → `/ingest`, question box →
+`/answer` scoped to the returned `filing_id`) with no business logic of
+its own — manually verified, not unit-tested, since there's no logic in
+it to test beyond what `tests/api` already covers.
+
+See the README for this layer's other current limitations (no auth, no
+persistent storage, no PDF support, synchronous request handling).

@@ -28,7 +28,7 @@ def test_health_returns_ok():
 
 
 def test_answer_endpoint_returns_a_grounded_answer_as_json(monkeypatch):
-    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k):
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
         return AnswerResult(
             query=query_text,
             answered=True,
@@ -51,7 +51,7 @@ def test_answer_endpoint_returns_a_grounded_answer_as_json(monkeypatch):
 
 
 def test_answer_endpoint_returns_a_refusal_as_json(monkeypatch):
-    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k):
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
         return AnswerResult(
             query=query_text,
             answered=False,
@@ -75,7 +75,7 @@ def test_answer_endpoint_returns_a_refusal_as_json(monkeypatch):
 def test_answer_endpoint_passes_top_k_through_to_the_pipeline(monkeypatch):
     captured = {}
 
-    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k):
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
         captured["top_k"] = top_k
         return AnswerResult(query=query_text, answered=False, refusal_reason="n/a")
 
@@ -92,7 +92,7 @@ def test_answer_endpoint_passes_top_k_through_to_the_pipeline(monkeypatch):
 def test_answer_endpoint_top_k_defaults_to_none_when_omitted(monkeypatch):
     captured = {}
 
-    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k):
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
         captured["top_k"] = top_k
         return AnswerResult(query=query_text, answered=False, refusal_reason="n/a")
 
@@ -119,3 +119,43 @@ def test_answer_endpoint_rejects_a_request_missing_the_query_field():
         app.dependency_overrides.clear()
 
     assert response.status_code == 422
+
+
+def test_answer_endpoint_defaults_to_the_fixture_filing_ids_when_no_filing_id_given(monkeypatch):
+    """The whole point of scoping by filing_id: an unscoped query must not
+    silently start including whatever's been uploaded into the shared
+    collection since process start -- it stays pinned to the 4 baked-in
+    fixtures.
+    """
+    captured = {}
+
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
+        captured["filing_ids"] = filing_ids
+        return AnswerResult(query=query_text, answered=False, refusal_reason="n/a")
+
+    monkeypatch.setattr(app_module, "answer", fake_answer)
+    _override_all_dependencies()
+    try:
+        client.post("/answer", json={"query": "q"})
+    finally:
+        app.dependency_overrides.clear()
+
+    assert captured["filing_ids"] == app_module._FIXTURE_FILING_IDS
+    assert len(captured["filing_ids"]) == 4
+
+
+def test_answer_endpoint_scopes_to_the_given_filing_id(monkeypatch):
+    captured = {}
+
+    def fake_answer(query_text, qdrant_client, openai_client, sparse_model, cohere_client, top_k, filing_ids):
+        captured["filing_ids"] = filing_ids
+        return AnswerResult(query=query_text, answered=False, refusal_reason="n/a")
+
+    monkeypatch.setattr(app_module, "answer", fake_answer)
+    _override_all_dependencies()
+    try:
+        client.post("/answer", json={"query": "q", "filing_id": "upload-abc123"})
+    finally:
+        app.dependency_overrides.clear()
+
+    assert captured["filing_ids"] == ["upload-abc123"]
